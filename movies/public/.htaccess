@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_URI} !\.(css|jpg|gif|js|ico|png|txt|html|htm|svg|rss|xsl)$
+    RewriteRule ^ index.php [L]
+</IfModule>

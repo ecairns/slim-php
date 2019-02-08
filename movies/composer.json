@@ -1,0 +1,16 @@
+{
+  "require": {
+    "slim/slim": "^3.11",
+    "illuminate/database": "^5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "CCB\\": "app/src/CCB/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CCB\\": "app/src/CCB/"
+    }
+  }
+}
