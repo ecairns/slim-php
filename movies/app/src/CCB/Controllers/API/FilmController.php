@@ -43,6 +43,15 @@ class FilmController {
         $params['rating']   = !empty($q['rating']) ? explode(",", $q['rating']) : null;
         $params['title']    = !empty($q['title']) ? $q['title'] : null;
 
+
+        if (!empty($q['order'])) {
+            switch ($q['order']) {
+                case "id":
+                    $params['orderBy'] = "film.film_id";
+                    break;
+            }
+        }
+
         $resultSet = $this->service->search($params);
 
         return $response->withJson($resultSet);

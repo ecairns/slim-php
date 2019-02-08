@@ -54,7 +54,7 @@ class FilmService implements ModelServiceInterface {
      */
     public function fetch(array $params = []) {
         $query   = (new Film)->newQuery();
-        $orderBy = '';
+        $orderBy = !empty($params['orderBy']) ? $params['orderBy'] : null;
 
         if (!empty($params['id'])) {
             $query = $query->whereIn("film_id", $params['id']);
@@ -84,7 +84,7 @@ class FilmService implements ModelServiceInterface {
                 ->selectRaw("film.*, $sql as score", [$searchableTerm])
                 ->whereRaw("MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)", $searchableTerm);
 
-            $orderBy = 'score DESC';
+            $orderBy = empty($orderBy) ? 'score DESC' : $orderBy;
         }
 
         if (!empty($params['with'])) {

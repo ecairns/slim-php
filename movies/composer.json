@@ -12,5 +12,8 @@
     "psr-4": {
       "CCB\\": "app/src/CCB/"
     }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7"
   }
 }
