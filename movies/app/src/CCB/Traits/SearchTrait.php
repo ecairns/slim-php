@@ -40,8 +40,12 @@ Trait SearchTrait {
     public function search(array $params) {
         $docs = $this->fetch($params);
 
+        //Using a search like solr this is unnecessary, in mysql, I've read running 2 queries is best for getting count
+        $params['COUNT'] = true;
+        $count = $this->fetch($params);
+
         $resultSet = [
-            "numFound" => count($docs),
+            "numFound" => $count,
             "docs"     => $docs
         ];
 

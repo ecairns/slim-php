@@ -31,7 +31,8 @@ class FilmService implements ModelServiceInterface {
      * @return mixed
      */
     public function fetchId($id, array $params = []) {
-        return reset($this->fetchIds([$id], $params));
+        $rows =  $this->fetchIds([$id], $params);
+        return $rows->first();
     }
 
     /**
@@ -53,7 +54,16 @@ class FilmService implements ModelServiceInterface {
      * @return Film[]|\Illuminate\Database\Eloquent\Collection
      */
     public function fetch(array $params = []) {
-        $query   = (new Film)->newQuery();
+        $MAX_LIMIT = 100;  // maybe define in a config somewhere,
+        $DEFAULT_LIMIT = 10;
+
+        $query  = (new Film)->newQuery();
+        $offset = !empty($params['offset']) ? (int)$params['offset'] : 0;
+        $limit  = !empty($params['limit']) ? (int)$params['limit'] : $DEFAULT_LIMIT;
+
+        if ($offset < 0) $offset = 0;
+        if (empty($limit) || $limit > $MAX_LIMIT) $limit = $MAX_LIMIT;
+
         $orderBy = !empty($params['orderBy']) ? $params['orderBy'] : null;
 
         if (!empty($params['id'])) {
@@ -93,6 +103,17 @@ class FilmService implements ModelServiceInterface {
 
         if (!empty($orderBy)) {
             $query = $query->orderByRaw($orderBy);
+        }
+
+        if (!empty($params['COUNT'])) {
+            //Using a search like solr this is unnecessary, in mysql, I've read running 2 queries is best for getting count
+            $query = $query->selectRaw('count(1) as c');
+            $row   = $query->get()->first();
+
+            return $row->c;
+        }
+        else if ($limit) {
+            $query = $query->offset($offset)->limit($limit);
         }
 
         return $query->get();
